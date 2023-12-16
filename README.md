@@ -1,3 +1,26 @@
+# Developer Guidelines
+
+## Folder Structure
+
+### 'Common' Folder
+
+Place all the common elements, components, stylesheets, scripts, etc., inside the ‘common’ folder.
+
+### 'Assets' Folder
+
+Place all the resource files that you need to use in the application inside the ‘assets’ folder.
+
+### 'Components' Folder
+
+Create all your React components inside the ‘components’  folder. For each component, you need to first create a folder by the name of that component. Inside this folder, you need to create one JSX file and one stylesheet corresponding to that component.
+
+For example, if you are creating the home component, then you can create a folder named ‘home’ inside the ‘components’ folder. Inside this folder, you can create two files, ‘Home.js’ and ‘Home.css’, which are, respectively, the JSX and stylesheet files corresponding to the home component of the application. It should look like this.
+
+- ‘components’ folder
+- - ‘home’ folder
+- - - ‘Home.js’ file
+- - - ‘Home.css’ file
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
