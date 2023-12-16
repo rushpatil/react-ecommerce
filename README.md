@@ -16,10 +16,10 @@ Create all your React components inside the ‘components’  folder. For each c
 
 For example, if you are creating the home component, then you can create a folder named ‘home’ inside the ‘components’ folder. Inside this folder, you can create two files, ‘Home.js’ and ‘Home.css’, which are, respectively, the JSX and stylesheet files corresponding to the home component of the application. It should look like this.
 
-- ‘components’ folder
-- - ‘home’ folder
-- - - ‘Home.js’ file
-- - - ‘Home.css’ file
+‘components’ folder
+- ‘home’ folder
+  - ‘Home.js’ file
+  - ‘Home.css’ file
 
 # Getting Started with Create React App
 
