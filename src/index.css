@@ -11,5 +11,9 @@ body * {
 }
 
 .body-container {
-    margin: 24px;
+    margin: 30px;
+}
+
+.error-text {
+    font-size: 15px !important;
 }

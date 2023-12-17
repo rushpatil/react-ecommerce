@@ -22,7 +22,7 @@
 
 /* navbar buttons */
 
-.navbar-container .MuiButton-text {
+.navbar-container .navbar-section:nth-child(3) .MuiButton-text {
     margin-left: 12px;
     padding: 6px 16px;
 }

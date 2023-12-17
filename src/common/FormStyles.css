@@ -1,0 +1,42 @@
+/* form container for login & signup */
+
+.form-container {
+    max-width: 425px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
+.form-container .form-header {
+    text-align: center;
+}
+
+.form-container .form-header-icon {
+    background-color: firebrick;
+    border-radius: 50%;
+    display: inline-block;
+    padding: 10px;
+    height: 25px;
+    width: 25px;
+    margin-bottom: 20px;
+}
+
+.form-container .form-header-icon svg {
+    color: white;
+}
+
+.form-container .submit-button {
+    margin-top: 30px;
+}
+
+.form-container .MuiTypography-body2:not(:last-child) {
+    margin-bottom: 60px;
+    margin-top: 20px;
+}
+
+.form-container .MuiTypography-body2:last-child {
+    text-align: center;
+}
+
+.form-container .error-text {
+    margin-top: 10px;
+}
