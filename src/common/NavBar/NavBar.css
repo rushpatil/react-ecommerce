@@ -1,0 +1,57 @@
+/* main navbar styles */
+
+.navbar-container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+}
+
+.navbar-container .navbar-section {
+    width: 33%; /* 3 equal sections */
+}
+
+/* navbar logo */
+
+.navbar-container svg.MuiSvgIcon-root {
+    margin-right: 6px;
+}
+
+.navbar-container .MuiIconButton-root:hover {
+    background-color: inherit;
+}
+
+/* navbar buttons */
+
+.navbar-container .MuiButton-text {
+    margin-left: 12px;
+    padding: 6px 16px;
+}
+
+.navbar-container .navbar-section:nth-child(3) .MuiButton-text:last-child {
+    background-color: firebrick;
+}
+
+.navbar-container .navbar-section:nth-child(3) {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* navbar search */
+
+.navbar-container .navbar-section:nth-child(2) {
+    display: flex;
+    justify-content: center;
+}
+
+.navbar-container .searchbar-container {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+    padding: 2px 8px;
+    max-width: 300px;
+}
+
+.navbar-container .searchbar-container * {
+    color: white;
+}
