@@ -13,6 +13,8 @@ export const Login = () => {
     const [error, setError]       = useState('');
 
     const handleSignIn = () => {
+        setError('');
+        
         // perform validation
         if (!email || !password) {
             setError('Please enter both fields');
