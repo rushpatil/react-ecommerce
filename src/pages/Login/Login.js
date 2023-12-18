@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
-import LockIcon from '@material-ui/icons/Lock';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
+// material ui
 import Button from '@material-ui/core/Button';
+import LockIcon from '@material-ui/icons/Lock';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+
+// api
+import { userApi } from '../../api/userApi';
+
+// user redux
+import { setUser } from '../../redux/actions/userActions';
 
 
 
@@ -12,22 +22,40 @@ export const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError]       = useState([]);
 
-    const handleSignIn = () => {
-        setError([]);
-        
-        // perform validation
-        if (!email || !password) {
-            setError(['Please enter both fields']);
-            return;
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    const handleSignIn = async () => {
+        try {
+
+            setError([]);
+
+            // perform validation
+            if (!email || !password) {
+                setError(['Please enter both fields']);
+                return;
+            }
+
+            const userData = {
+                username: email, password
+            }
+
+            const response = await userApi.login(userData);
+            if (response.status === 200) {
+                console.log(response)
+                dispatch(setUser({ ...userData, token: response.data.token }));
+                history.push('/'); // navigate to another route without losing user context
+            }
+
+            // clear the form and error after successful login
+            setEmail('');
+            setPassword('');
+            setError([]);
+
+        } catch (error) {
+            setError([error.message]);
         }
-
-        // authentication logic
-
-        // clear the form and error after successful login
-        setEmail('');
-        setPassword('');
-        setError([]);
-    };
+    }
 
     return (
         <div className="form-container">

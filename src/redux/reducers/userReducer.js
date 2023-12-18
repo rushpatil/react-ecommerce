@@ -5,6 +5,7 @@ const initialState = {
     lastName: null,
     contactNumber: null,
     role: [],
+    token: null
 };
 
 const userReducer = (state = initialState, action) => {
