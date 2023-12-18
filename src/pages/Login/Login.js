@@ -10,14 +10,14 @@ export const Login = () => {
 
     const [email, setEmail]       = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError]       = useState('');
+    const [error, setError]       = useState([]);
 
     const handleSignIn = () => {
-        setError('');
+        setError([]);
         
         // perform validation
         if (!email || !password) {
-            setError('Please enter both fields');
+            setError(['Please enter both fields']);
             return;
         }
 
@@ -26,7 +26,7 @@ export const Login = () => {
         // clear the form and error after successful login
         setEmail('');
         setPassword('');
-        setError('');
+        setError([]);
     };
 
     return (
@@ -60,7 +60,9 @@ export const Login = () => {
                     margin="normal"
                 />
 
-                {error && <Typography color="error" className="error-text">{error}</Typography>}
+                {error.map((err) => 
+                    <Typography color="error" className="error-text">{err}</Typography>
+                )}
 
                 <Button variant="contained" color="primary" onClick={handleSignIn} className="submit-button" fullWidth>
                     Sign In

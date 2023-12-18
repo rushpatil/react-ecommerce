@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
-import LockIcon from '@material-ui/icons/Lock';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
+// material ui
 import Button from '@material-ui/core/Button';
+import LockIcon from '@material-ui/icons/Lock';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+
+// api
 import { userApi } from '../../api/userApi';
+
+// user redux
+import { setUser } from '../../redux/actions/userActions';
 
 
 
@@ -16,6 +25,9 @@ export const Signup = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [contactNumber, setContactNumber]     = useState('');
     const [error, setError]                     = useState([]);
+
+    const dispatch = useDispatch();
+    const history = useHistory();
 
     const validateFields = () => {
         let errorList = [];
@@ -60,11 +72,13 @@ export const Signup = () => {
                 password,
                 confirmPassword,
                 contactNumber,
+                "role": ["admin"] // to add user with admin role
             };
 
             const response = await userApi.signup(userData);
             if (response.status === 200) {
-                window.location.href = '/';
+                dispatch(setUser(userData));
+                history.push('/'); // navigate to another route without losing user context
             }
 
             // clear the form and error after successful sign-up
