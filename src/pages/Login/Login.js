@@ -43,8 +43,11 @@ export const Login = () => {
             const response = await userApi.login(userData);
             if (response.status === 200) {
                 console.log(response)
-                dispatch(setUser({ ...userData, token: response.data.token }));
-                history.push('/'); // navigate to another route without losing user context
+                dispatch(setUser({ 
+                    email, password,
+                    token: response.data.token 
+                }));
+                history.push('/');
             }
 
             // clear the form and error after successful login

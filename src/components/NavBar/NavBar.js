@@ -19,7 +19,7 @@ import { clearUser } from '../../redux/actions/userActions';
 
 const Navbar = ({ user }) => {
 
-    // console.log(user)
+    // console.log(user);
 
     const dispatch = useDispatch();
     const history = useHistory();
@@ -39,14 +39,12 @@ const Navbar = ({ user }) => {
                 <div className="navbar-container">
 
                     <div className="navbar-section">
-                        <Button component={Link} to="/" color="inherit">
-                            <IconButton edge="start" color="inherit">
-                                <ShoppingCartIcon />
-                                <Typography variant="subtitle1" color="inherit">
-                                    Upgrad Eshop
-                                </Typography>
-                            </IconButton>
-                        </Button>
+                        <IconButton edge="start" color="inherit" component={Link} to="/">
+                            <ShoppingCartIcon />
+                            <Typography variant="subtitle1" color="inherit">
+                                Upgrad Eshop
+                            </Typography>
+                        </IconButton>
                     </div>
 
                     <div className="navbar-section">
