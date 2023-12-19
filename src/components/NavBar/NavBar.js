@@ -1,18 +1,36 @@
 import React from 'react';
-import { AppBar, Toolbar, IconButton, InputBase, Button, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
+
+// material ui
+import { AppBar, Toolbar, IconButton, InputBase, Button, Typography } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+
+// styles
 import './NavBar.css';
 
+// user from redux
+import { clearUser } from '../../redux/actions/userActions';
 
 
-const Navbar = () => {
 
-    const user = {
-        isLoggedIn: false,
-        isAdmin: true
-    }
+const Navbar = ({ user }) => {
+
+    // console.log(user);
+
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    const handleLogout = () => {
+        // clear user data by setting it to null
+        dispatch(clearUser());
+
+        // redirect the user to a login page
+        history.push('/login');
+    };
 
     return (
         <AppBar position="static">
@@ -21,14 +39,12 @@ const Navbar = () => {
                 <div className="navbar-container">
 
                     <div className="navbar-section">
-                        <Button component={Link} to="/" color="inherit">
-                            <IconButton edge="start" color="inherit">
-                                <ShoppingCartIcon />
-                                <Typography variant="subtitle1" color="inherit">
-                                    Upgrad Eshop
-                                </Typography>
-                            </IconButton>
-                        </Button>
+                        <IconButton edge="start" color="inherit" component={Link} to="/">
+                            <ShoppingCartIcon />
+                            <Typography variant="subtitle1" color="inherit">
+                                Upgrad Eshop
+                            </Typography>
+                        </IconButton>
                     </div>
 
                     <div className="navbar-section">
@@ -50,12 +66,12 @@ const Navbar = () => {
                                 <Button color="inherit" component={Link} to="/">
                                     Home
                                 </Button>
-                                {user.isAdmin &&
+                                {user.role.includes('admin') &&
                                     <Button color="inherit">
                                         Add Product
                                     </Button>
                                 }
-                                <Button color="inherit">
+                                <Button color="inherit" onClick={handleLogout}>
                                     Logout
                                 </Button>
                             </>
@@ -82,4 +98,12 @@ const Navbar = () => {
     )
 };
 
-export default Navbar;
+// map the Redux state to component props
+const mapStateToProps = (state) => {
+    return {
+        user: state.user,
+    };
+};
+
+// connect the component to the Redux store
+export default connect(mapStateToProps)(Navbar);

@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
-import LockIcon from '@material-ui/icons/Lock';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
+// material ui
 import Button from '@material-ui/core/Button';
+import LockIcon from '@material-ui/icons/Lock';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+
+// api
+import { userApi } from '../../api/userApi';
+
+// user redux
+import { setUser } from '../../redux/actions/userActions';
 
 
 
@@ -10,22 +20,45 @@ export const Login = () => {
 
     const [email, setEmail]       = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError]       = useState('');
+    const [error, setError]       = useState([]);
 
-    const handleSignIn = () => {
-        // perform validation
-        if (!email || !password) {
-            setError('Please enter both fields');
-            return;
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    const handleSignIn = async () => {
+        try {
+
+            setError([]);
+
+            // perform validation
+            if (!email || !password) {
+                setError(['Please enter both fields']);
+                return;
+            }
+
+            const userData = {
+                username: email, password
+            }
+
+            const response = await userApi.login(userData);
+            if (response.status === 200) {
+                console.log(response)
+                dispatch(setUser({ 
+                    email, password,
+                    token: response.data.token 
+                }));
+                history.push('/');
+            }
+
+            // clear the form and error after successful login
+            setEmail('');
+            setPassword('');
+            setError([]);
+
+        } catch (error) {
+            setError([error.message]);
         }
-
-        // authentication logic
-
-        // clear the form and error after successful login
-        setEmail('');
-        setPassword('');
-        setError('');
-    };
+    }
 
     return (
         <div className="form-container">
@@ -58,7 +91,9 @@ export const Login = () => {
                     margin="normal"
                 />
 
-                {error && <Typography color="error" className="error-text">{error}</Typography>}
+                {error.map((err) => 
+                    <Typography color="error" className="error-text">{err}</Typography>
+                )}
 
                 <Button variant="contained" color="primary" onClick={handleSignIn} className="submit-button" fullWidth>
                     Sign In

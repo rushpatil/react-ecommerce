@@ -10,6 +10,10 @@
     width: 33%; /* 3 equal sections */
 }
 
+.navbar-container .MuiTouchRipple-root {
+    border-radius: 5px;
+}
+
 /* navbar logo */
 
 .navbar-container svg.MuiSvgIcon-root {

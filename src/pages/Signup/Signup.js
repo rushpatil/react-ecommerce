@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
-import LockIcon from '@material-ui/icons/Lock';
+import { useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+
+// material ui
 import Button from '@material-ui/core/Button';
+import LockIcon from '@material-ui/icons/Lock';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+
+// api
+import { userApi } from '../../api/userApi';
+
+// user redux
+import { setUser } from '../../redux/actions/userActions';
 
 
 
@@ -14,25 +24,80 @@ export const Signup = () => {
     const [password, setPassword]               = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [contactNumber, setContactNumber]     = useState('');
-    const [error, setError]                     = useState('');
+    const [error, setError]                     = useState([]);
 
-    const handleSignUp = () => {
-        // perform validation
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    const validateFields = () => {
+        let errorList = [];
         if (!firstName || !lastName || !email || !password || !confirmPassword || !contactNumber) {
-            setError('All fields are required.');
-            return;
+            errorList.push("All fields are required");
+        }
+        
+        if (password && confirmPassword && password !== confirmPassword) {
+            errorList.push("Password and confirm password fields don't match");
+        }
+        
+        if (password && password.length < 6) {
+            errorList.push("Password should have six characters or more");
+        }
+        
+        if (email && !isValidEmail(email)) {
+            errorList.push("Please enter a valid email");
         }
 
-        // auth logic
+        const hasError = (errorList.length > 0);
+        if (hasError) {
+            setError(errorList);
+        }
+        return hasError;
+    }
 
-        // clear the form and error after successful sign-up
-        setFirstName('');
-        setLastName('');
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
-        setContactNumber('');
-        setError('');
+    const handleSignUp = async () => {
+        try {
+            setError([]);
+
+            // perform validation
+            const hasError = validateFields();
+            if (hasError) {
+                return;
+            }
+
+            // auth logic
+            const userData = {
+                firstName,
+                lastName,
+                email,
+                password,
+                confirmPassword,
+                contactNumber,
+                "role": ["admin"] // to add user with admin role
+            };
+
+            const response = await userApi.signup(userData);
+            if (response.status === 200) {
+                dispatch(setUser(userData));
+                history.push('/'); // navigate to another route without losing user context
+            }
+
+            // clear the form and error after successful sign-up
+            setFirstName('');
+            setLastName('');
+            setEmail('');
+            setPassword('');
+            setConfirmPassword('');
+            setContactNumber('');
+            setError([]);
+        } catch (error) {
+            setError([error.message]);
+        }
+    };
+
+    const isValidEmail = (email) => {
+        // regular expression for a basic email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
     };
 
     return (
@@ -99,7 +164,9 @@ export const Signup = () => {
                     margin="normal"
                 />
 
-                {error && <Typography color="error" className="error-text">{error}</Typography>}
+                {error.map((err) => 
+                    <Typography color="error" className="error-text">{err}</Typography>
+                )}
 
                 <Button variant="contained" color="primary" onClick={handleSignUp} className="submit-button" fullWidth>
                     Sign Up
