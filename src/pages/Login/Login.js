@@ -43,9 +43,12 @@ export const Login = () => {
             const response = await userApi.login(userData);
             if (response.status === 200) {
                 console.log(response)
+                console.log(response.data)
+                console.log(response.data.token)
+                localStorage.setItem('authToken', response.data.token);
                 dispatch(setUser({ 
                     email, password,
-                    token: response.data.token 
+                    token: response.data.token
                 }));
                 history.push('/');
             }
