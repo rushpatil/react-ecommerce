@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createProduct, getAllCategories } from '../../api/productAPIs';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import CreatableSelect from "react-select/creatable";
+// import CreatableSelect from "react-select/creatable";
 import { Button } from '@material-ui/core';
 
 
@@ -103,7 +103,7 @@ export const AddProducts = () => {
         />
     <div style={{ marginBottom: "30px" }}>
     <Options setCategories = {setCategories}/>
-    <CreatableSelect
+    {/* <CreatableSelect
     label="Category"
   className="basic-single"
   classNamePrefix="select"
@@ -119,7 +119,7 @@ export const AddProducts = () => {
   ].filter(Boolean)}
   value={category?.value}
   onChange={(data) => setCategory(data.value)}
-/>
+/> */}
 </div>
         <TextField
         required
