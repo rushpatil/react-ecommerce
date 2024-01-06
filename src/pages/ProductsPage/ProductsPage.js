@@ -63,17 +63,17 @@ export const ProductsPage = () => {
                                 </Typography>
                             </CardContent>
                         </CardActionArea>
-                        {/* <CardActions>
+                        <CardActions>
                             <Button variant="contained" size="small" color="primary">
                                 BUY
                             </Button>
-                            <IconButton aria-label="delete" size="small" color="primary" onClick={modifyProduct}>
+                            {/* <IconButton aria-label="delete" size="small" color="primary" onClick={modifyProduct}>
                                 <EditIcon />
                             </IconButton>
                             <IconButton size="small" color="primary" onClick={deleteProduct}>
                                 <DeleteIcon />
-                            </IconButton>
-                        </CardActions> */}
+                            </IconButton> */}
+                        </CardActions>
                     </Card>
                 </Grid>
             ))}
