@@ -47,7 +47,9 @@ export const createProduct = (requestJson, accessToken) => {
 		body: JSON.stringify(requestJson),
 		headers: {
 			'Content-type': 'application/json; charset=UTF-8',
-			'x-auth-token': accessToken,
+			'Authorization': `Bearer ${accessToken}`,
+			// 'X-Auth-Token': accessToken,
+			// Authorization:`Bearer ${accessToken}`,
 		},
 	}).then((response) => {
 		response.text().then((json) => {
@@ -185,3 +187,39 @@ export const viewProduct = (id, accessToken) => {
 	});
 	return promise;
 };
+
+export const getAllCategories = (accessToken) => {
+	let promiseResolve = null;
+	let promiseReject = null;
+	let promise = new Promise((resolve, reject) => {
+		promiseResolve = resolve;
+		promiseReject = reject;
+	});
+	fetch('http://localhost:8080/api/products/categories', {
+		method: 'GET',
+		headers: {
+			'x-auth-token': accessToken,
+			'allow-origin': '*',
+		},
+	}).then((response) => {
+		response.json().then((json) => {
+			if(response.ok) {
+				promiseResolve({
+					data: json,
+					response: response,
+				});
+			} else {
+				promiseReject({
+					reason: "Server error occurred.",
+					response: response,
+				});
+			}
+		});
+	}).catch((err) => {
+		promiseReject({
+			reason: "Some error occurred.",
+			response: err,
+		});
+	});
+	return promise;
+}

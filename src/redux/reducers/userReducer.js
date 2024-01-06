@@ -4,7 +4,7 @@ const initialState = {
     firstName: null,
     lastName: null,
     contactNumber: null,
-    role: [],
+    roles: [],
     token: null
 };
 

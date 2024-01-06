@@ -20,6 +20,7 @@ export const Login = () => {
 
     const [email, setEmail]       = useState('');
     const [password, setPassword] = useState('');
+    const [roles, setRoles] = useState([]);
     const [error, setError]       = useState([]);
 
     const dispatch = useDispatch();
@@ -42,13 +43,14 @@ export const Login = () => {
 
             const response = await userApi.login(userData);
             if (response.status === 200) {
-                console.log(response)
-                console.log(response.data)
-                console.log(response.data.token)
-                localStorage.setItem('authToken', response.data.token);
+                
+                console.info({response});
+                localStorage.setItem('authToken', response.headers['x-auth-token']);
+                
                 dispatch(setUser({ 
                     email, password,
-                    token: response.data.token
+                    token: response.data.token,
+                    roles: response.data.roles
                 }));
                 history.push('/');
             }
