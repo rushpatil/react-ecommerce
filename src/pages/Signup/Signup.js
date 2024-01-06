@@ -72,7 +72,7 @@ export const Signup = () => {
                 password,
                 confirmPassword,
                 contactNumber,
-                "role": ["admin"] // to add user with admin role
+                roles: [] // to add user with admin role
             };
 
             const response = await userApi.signup(userData);

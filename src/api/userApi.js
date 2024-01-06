@@ -16,6 +16,7 @@ export const userApi = {
     signup: async (userData) => {
         try {
             const response = await axiosInstance.post('/signup', userData);
+            console.log(response.headers.get('x-auth-token'));
             return response;
         } catch (error) {
             throw new Error(error.response?.data?.message || generalError);

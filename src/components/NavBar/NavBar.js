@@ -66,8 +66,9 @@ const Navbar = ({ user }) => {
                                 <Button color="inherit" component={Link} to="/">
                                     Home
                                 </Button>
-                                {user.role.includes('admin') &&
-                                    <Button color="inherit">
+                                {console.log(user)}
+                                {user?.roles?.includes('ADMIN') &&
+                                    <Button color="inherit" component={Link} to="/products">
                                         Add Product
                                     </Button>
                                 }
