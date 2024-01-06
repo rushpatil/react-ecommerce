@@ -7,6 +7,7 @@ import { store, persistor } from './redux/store';
 // styles
 import './index.css';
 import './common/FormStyles.css'
+import 'react-toastify/dist/ReactToastify.css';
 
 // component
 import App from './App';
