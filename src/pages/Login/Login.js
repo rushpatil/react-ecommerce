@@ -20,6 +20,7 @@ export const Login = () => {
 
     const [email, setEmail]       = useState('');
     const [password, setPassword] = useState('');
+    const [roles, setRoles] = useState([]);
     const [error, setError]       = useState([]);
 
     const dispatch = useDispatch();
@@ -44,7 +45,8 @@ export const Login = () => {
             if (response.status === 200) {
                 dispatch(setUser({ 
                     email, password,
-                    token: response.token
+                    token: response.token,
+                    roles: response.roles
                 }));
                 history.push('/');
             }
