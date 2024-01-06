@@ -46,7 +46,7 @@ export const Login = () => {
                 dispatch(setUser({ 
                     email, password,
                     token: response.token,
-                    roles: response.roles
+                    roles: response.data.roles
                 }));
                 history.push('/');
             }
