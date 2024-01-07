@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import { ToastContainer, toast } from 'react-toastify';
 
 // material ui
 import Button from '@material-ui/core/Button';
@@ -10,9 +11,6 @@ import Typography from '@material-ui/core/Typography';
 
 // api
 import { userApi } from '../../api/userApi';
-
-// user redux
-import { setUser } from '../../redux/actions/userActions';
 
 
 
@@ -55,6 +53,7 @@ export const Signup = () => {
     }
 
     const handleSignUp = async () => {
+
         try {
             setError([]);
 
@@ -77,8 +76,7 @@ export const Signup = () => {
 
             const response = await userApi.signup(userData);
             if (response.status === 200) {
-                dispatch(setUser(userData));
-                history.push('/'); // navigate to another route without losing user context
+                toast.success('Successfully signed up!');
             }
 
             // clear the form and error after successful sign-up
@@ -164,13 +162,15 @@ export const Signup = () => {
                     margin="normal"
                 />
 
-                {error.map((err) => 
-                    <Typography color="error" className="error-text">{err}</Typography>
+                {error.map((err, index) => 
+                    <Typography color="error" className="error-text" key={`err-${index}`}>{err}</Typography>
                 )}
 
                 <Button variant="contained" color="primary" onClick={handleSignUp} className="submit-button" fullWidth>
                     Sign Up
                 </Button>
+
+                <ToastContainer />
             </form>
 
             <Typography variant="body2">

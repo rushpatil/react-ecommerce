@@ -2,11 +2,10 @@ import axios from 'axios';
 
 
 
-const baseURL = 'http://localhost:8080/api/auth';
 const generalError = 'An error occurred, please try again later';
 
 const axiosInstance = axios.create({
-    baseURL,
+    baseURL: '/api/auth',
     headers: {
         'Content-Type': 'application/json',
     },
@@ -26,7 +25,9 @@ export const userApi = {
     login: async (loginData) => {
         try {
             const response = await axiosInstance.post('/signin', loginData);
-            return response;
+            let data   = response;
+            data.token = response.headers.get('x-auth-token');
+            return data;
         } catch (error) {
             throw new Error(error.response?.data?.message || generalError);
         }

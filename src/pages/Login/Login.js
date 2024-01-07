@@ -43,13 +43,9 @@ export const Login = () => {
 
             const response = await userApi.login(userData);
             if (response.status === 200) {
-                
-                console.info({response});
-                localStorage.setItem('authToken', response.headers['x-auth-token']);
-                
                 dispatch(setUser({ 
                     email, password,
-                    token: response.data.token,
+                    token: response.token,
                     roles: response.data.roles
                 }));
                 history.push('/');
@@ -96,8 +92,8 @@ export const Login = () => {
                     margin="normal"
                 />
 
-                {error.map((err) => 
-                    <Typography color="error" className="error-text">{err}</Typography>
+                {error.map((err, index) => 
+                    <Typography color="error" className="error-text" key={`err-${index}`}>{err}</Typography>
                 )}
 
                 <Button variant="contained" color="primary" onClick={handleSignIn} className="submit-button" fullWidth>
