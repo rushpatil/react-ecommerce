@@ -15,7 +15,7 @@ import { getAllProducts } from "../../api/productAPIs";
 import { useDispatch } from 'react-redux';
 
 
-export const ProductsPage = () => {
+export const ProductPage = () => {
 
     const [error, setError] = useState([]);
     const history = useHistory();
