@@ -10,7 +10,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
-import { CardActionArea, CardActions } from "@material-ui/core/";
+import { CardActionArea, CardActions, InputLabel } from "@material-ui/core/";
 import { getAllProducts } from "../../api/productAPIs";
 import { useDispatch } from 'react-redux';
 import { useLocation } from 'react-router-dom';
@@ -30,8 +30,6 @@ const ProductDetailsPage = () => {
     let componentMounted = true;
 
     useEffect(() => {
-        console.log('Product Data:', JSON.parse(location.state?.productData));
-        // The above line will log the productData to the console when the component mounts
         return () => {
             componentMounted = false;
         };
@@ -39,7 +37,7 @@ const ProductDetailsPage = () => {
 
     const productData = JSON.parse(location.state?.productData);
 
-    let json = productData.value || {
+    let productDetailsData = productData.value || {
         id: null,
         name: null,
         category: null,
@@ -51,18 +49,116 @@ const ProductDetailsPage = () => {
 
 
     return (
-
-        <div>
-            <h2>Product Details</h2>
-            {productData && (
-                <div>
-                    <p>ID: {json.id}</p>
-                    <p>Name: {json.name}</p>
-                    <p>Category: {json.category}</p>
-                    {/* Add other details */}
-                </div>
-            )}
-        </div>
+        <Box sx={{ flexGrow: 1 }}>
+            <Grid container spacing={1}>
+                <Grid container item spacing={3}>
+                    <Grid item xs={12}>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <ProductCategory />
+                        </div>
+                    </Grid>
+                    <Grid item xs={12} sx={{ display: { xs: 'none', md: 'none', lg: "flex" } }}>
+                        <div style={{ display: 'flex', justifyContent: 'center', padding: "5% 20% 0% 20%" }}>
+                            <Grid container>
+                                <Grid item xs={4}>
+                                    <img
+                                        style={{
+                                            maxWidth: "300px",
+                                            width: "100%",
+                                            height: "400px",
+                                        }}
+                                        src={productDetailsData.imageUrl}
+                                        alt={"Image of " + productDetailsData.name}
+                                    />
+                                </Grid>
+                                <Grid item xs={1} />
+                                <Grid item xs={7}>
+                                    <Grid container>
+                                        <Grid item xs={12}>
+                                            <div style={{ display: 'flex', justifyContent: 'left' }}>
+                                                <Typography variant={"h4"}>
+                                                    {productDetailsData.name}
+                                                </Typography>
+                                                <div style={{ paddingLeft: "2%" }}>
+                                                    <Typography
+                                                        variant={"body1"}
+                                                        style={{
+                                                            color: "#FFFFFF",
+                                                            backgroundColor: theme.palette.primary.main,
+                                                            padding: "2px 10px 2px 10px",
+                                                            marginTop: "5px",
+                                                            borderRadius: 20,
+                                                        }}
+                                                    >
+                                                        {"Available Quantity : " + productDetailsData.availableItems}
+                                                    </Typography>
+                                                </div>
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <div style={{ display: 'flex', justifyContent: 'left' }}>
+                                                <Typography
+                                                    variant={"body1"}
+                                                    style={{
+                                                        paddingTop: "2%",
+                                                    }}
+                                                >
+                                                    Category: <b>{productDetailsData.category.toUpperCase()}</b>
+                                                </Typography>
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <div style={{ display: 'flex', justifyContent: 'left' }}>
+                                                <Typography
+                                                    variant={"body1"}
+                                                    style={{
+                                                        paddingTop: "5%",
+                                                    }}
+                                                >
+                                                    {productDetailsData.description}
+                                                </Typography>
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <div style={{ display: 'flex', justifyContent: 'left' }}>
+                                                <Typography
+                                                    variant={"h5"}
+                                                    style={{
+                                                        color: theme.palette.secondary.main,
+                                                        paddingTop: "5%",
+                                                    }}
+                                                >
+                                                    &#8377; {productDetailsData.price}
+                                                </Typography>
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <div style={{ display: 'flex', justifyContent: 'left', paddingTop: "4%", width: "50%" }}>
+                                                <TextField
+                                                    id="count"
+                                                    label="Enter Quantity *"
+                                                    variant="outlined"
+                                                    fullWidth
+                                                />
+                                            </div>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <div style={{ display: 'flex', justifyContent: 'left', paddingTop: "4%" }}>
+                                                <Button variant="contained"
+                                                    color="primary"
+                                                >
+                                                    PLACE ORDER
+                                                </Button>
+                                            </div>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </div>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Box>
     );
 
 };
