@@ -1,4 +1,4 @@
-import { ProductsPage } from "./pages/ProductsPage/ProductsPage";
+import Home from "./pages/Home/Home";
 import { Login } from "./pages/Login/Login";
 import { Signup } from "./pages/Signup/Signup";
 import { AddProducts } from "./pages/AdminProductActions/AddProduct";
@@ -12,8 +12,8 @@ const routes = [
         exact: true,
     },
     {
-        path: '/',
-        component: ProductsPage,
+        path: '/home',
+        component: Home,
         exact: true,
     },
     {

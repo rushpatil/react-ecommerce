@@ -13,6 +13,7 @@ import { userApi } from '../../api/userApi';
 
 // user redux
 import { setUser } from '../../redux/actions/userActions';
+import { initialCatalog } from '../../redux/actions/productActions';
 
 
 
@@ -43,12 +44,13 @@ export const Login = () => {
 
             const response = await userApi.login(userData);
             if (response.status === 200) {
+                //Also store the token in browser cache for auth purpose
                 dispatch(setUser({ 
                     email, password,
                     token: response.token,
                     roles: response.data.roles
                 }));
-                history.push('/');
+                history.push('/home');
             }
 
             // clear the form and error after successful login
