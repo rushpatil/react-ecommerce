@@ -7,8 +7,9 @@ import { Typography } from '@material-ui/core';
 import { connect } from 'react-redux';
 import { initialCatalog } from '../../redux/actions/productActions';
 import _ from 'lodash';
+import { viewProduct } from '../../api/productAPIs';
 
-const ProductsList = ( {allProductsList, selectedSortingFilter, category, reFetchAllData }) => {
+const ProductsList = ( {user, allProductsList, selectedSortingFilter, category, reFetchAllData }) => {
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -66,6 +67,18 @@ const ProductsList = ( {allProductsList, selectedSortingFilter, category, reFetc
         (sortedProducts) => getSortedProducts(sortedProducts, selectedSortingFilter)
     )(allProductsList);
     
+    let loadProductDetailsPage = (productDetails) => {
+        console.log(productDetails);
+        viewProduct(productDetails.id, user.token).then((json) => {
+            const jsonData = JSON.stringify({
+                value: json.value,
+            });
+            console.log(jsonData);
+            history.push('/productDetailsPage', {productData: jsonData});
+        }).catch((json) => {
+            console.log("Error in productDetail page load :"+json.reason);
+        });
+    };
     return(
         <>
             <Grid container>
@@ -76,6 +89,7 @@ const ProductsList = ( {allProductsList, selectedSortingFilter, category, reFetc
 								<div key={"div_product_" + index} style={{display: 'flex', justifyContent: 'center', marginTop: "5%"}}>
 									<ProductCard
 										key={"product_" + index}
+                                        buyProduct={loadProductDetailsPage}
 										{...element}
 									/>
 								</div>
@@ -101,6 +115,7 @@ const ProductsList = ( {allProductsList, selectedSortingFilter, category, reFetc
 
 const mapStateToProps = (state) => {
     return {
+        user: state.user,
         allProductsList: state.productdata.products,
         selectedSortingFilter: state.productdata.selectedSortingFilter,
         category: state.productdata.selectedCategory,

@@ -2,6 +2,7 @@ import Home from "./pages/Home/Home";
 import { Login } from "./pages/Login/Login";
 import { Signup } from "./pages/Signup/Signup";
 import { AddProducts } from "./pages/AdminProductActions/AddProduct";
+import ProductDetailsPage from "./components/ProductDetailsPage/ProductDetailsPage";
 
 
 
@@ -26,6 +27,11 @@ const routes = [
         component: Signup,
         exact: true,
     },
+    {
+        path: '/productDetailsPage',
+        component: ProductDetailsPage,
+        exact: true,
+    }
 ];
 
 export default routes;
