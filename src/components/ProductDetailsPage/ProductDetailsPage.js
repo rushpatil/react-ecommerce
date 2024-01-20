@@ -28,6 +28,7 @@ const ProductDetailsPage = () => {
     const location = useLocation();
     const theme = useTheme();
     let componentMounted = true;
+    const [orderQuantity, setOrderQuantity] = useState('');
 
     useEffect(() => {
         return () => {
@@ -35,8 +36,11 @@ const ProductDetailsPage = () => {
         };
     }, [location.state?.productData]);
 
-    const productData = JSON.parse(location.state?.productData);
+    const handleQuantityChange = (event) =>{
+        setOrderQuantity(event.target.value);
+    }
 
+    const productData = JSON.parse(location.state?.productData);
     let productDetailsData = productData.value || {
         id: null,
         name: null,
@@ -47,6 +51,14 @@ const ProductDetailsPage = () => {
         description: null,
     };
 
+    let loadProductOrderPage = () => {
+        const jsonData = JSON.stringify({
+            product: productDetailsData,
+            quantity: orderQuantity,
+        });
+        console.log(jsonData);
+        history.push('/placeOrder', { orderData: jsonData });
+    };
 
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -139,6 +151,7 @@ const ProductDetailsPage = () => {
                                                     label="Enter Quantity *"
                                                     variant="outlined"
                                                     fullWidth
+                                                    onChange={handleQuantityChange}
                                                 />
                                             </div>
                                         </Grid>
@@ -146,6 +159,7 @@ const ProductDetailsPage = () => {
                                             <div style={{ display: 'flex', justifyContent: 'left', paddingTop: "4%" }}>
                                                 <Button variant="contained"
                                                     color="primary"
+                                                    onClick={() => loadProductOrderPage()}
                                                 >
                                                     PLACE ORDER
                                                 </Button>
