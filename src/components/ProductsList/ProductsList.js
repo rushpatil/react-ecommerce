@@ -79,6 +79,7 @@ const ProductsList = ( {user, allProductsList, selectedSortingFilter, category, 
             console.log("Error in productDetail page load :"+json.reason);
         });
     };
+    
     return(
         <>
             <Grid container>

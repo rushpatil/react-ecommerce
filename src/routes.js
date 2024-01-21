@@ -3,6 +3,7 @@ import { Login } from "./pages/Login/Login";
 import { Signup } from "./pages/Signup/Signup";
 import { AddProducts } from "./pages/AdminProductActions/AddProduct";
 import ProductDetailsPage from "./components/ProductDetailsPage/ProductDetailsPage";
+import ProductOrder from "./components/ProductOrder/ProductOrder";
 
 
 
@@ -30,6 +31,11 @@ const routes = [
     {
         path: '/productDetailsPage',
         component: ProductDetailsPage,
+        exact: true,
+    },
+    {
+        path: '/placeOrder',
+        component: ProductOrder,
         exact: true,
     }
 ];
