@@ -40,7 +40,7 @@ const Navbar = ({ user }) => {
                 <div className="navbar-container">
 
                     <div className="navbar-section">
-                        <IconButton edge="start" color="inherit" component={Link} to="/">
+                        <IconButton edge="start" color="inherit" component={Link} to="/home">
                             <ShoppingCartIcon />
                             <Typography variant="subtitle1" color="inherit">
                                 Upgrad Eshop
