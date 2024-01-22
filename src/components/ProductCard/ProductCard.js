@@ -11,11 +11,10 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import { CardActionArea, CardActions, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core/";
-import { Alert, AlertTitle } from "@mui/material";
 import { getAllProducts, deleteProduct } from "../../api/productAPIs";
 import { useDispatch, useSelector } from 'react-redux';
-// import { useNavigate } from "react-router-dom";
-// import  {EditProduct}  from "../../pages/AdminProductActions/EditProduct";
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 
 export const ProductCard = ({ buyProduct, ...productDetails }) => {
@@ -26,18 +25,13 @@ export const ProductCard = ({ buyProduct, ...productDetails }) => {
         }
         return text.substring(0, 200)+ "...";
     };
-    const [error, setError] = useState([]);
     const history = useHistory();
     const [success, setSuccess] = useState(false);
     const [apiData, setApiData] = useState([]);
-    const dispatch = useDispatch();
-    // const navigate = useNavigate();
 
     let componentMounted = true;
     const [open, setOpen] = useState(false);
     const AuthToken = useSelector(state => state.user?.token);
-
-    // const Authtoken = localStorage.getItem('authToken');
 
     const handleOpen = () => {
         setOpen(true);
@@ -46,18 +40,12 @@ export const ProductCard = ({ buyProduct, ...productDetails }) => {
     const handleClose = () => {
         setOpen(false);
     };
-
-    // const handleEdit = (id) => {
-    //     history.push('/editproduct/' + id);
-    // };
-
     const handleSubmit = async (id) => {
-        console.log(id);
         setSuccess(true);
         const response = await deleteProduct(id, AuthToken);
-        console.log(response);
         setApiData(apiData.filter(product => product.id != id))
         setOpen(false);
+        setSuccess(true);
     };
     
     useEffect(() => {
@@ -75,66 +63,15 @@ export const ProductCard = ({ buyProduct, ...productDetails }) => {
         handleProducts();
     }, []);
         
-    
+    const handleCloseAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setSuccess(false);
+        history.push('/home');
+      }
 
     return (
-    //     <Grid container spacing={2} mt={3}>
-    //         {apiData.map((products, index) => (
-    //             <Grid item md={3} sm={6} xs={6} key={index}>
-    //                 { success ? <>
-    //                     <Alert severity="success" style={{justifyContent: 'center'}}>
-    //                         <AlertTitle>Product {products.name} deleted Successfully</AlertTitle>
-    //                     </Alert>
-    //                 </> : <></>}
-    //                 <Card sx={{ maxWidth: 345 }}>
-    //                     <CardActionArea>
-    //                         <CardMedia
-    //                             component="img" 
-    //                             height="140"
-    //                             image={products.imageUrl}
-    //                             alt="green iguana"
-    //                         />
-    //                         <CardContent>
-    //                             <Typography gutterBottom variant="h5" component="div">
-    //                                 {products.name}
-    //                             </Typography>
-    //                             <Typography variant="body2" color="text.secondary">
-    //                                 {products.description}
-    //                             </Typography>
-    //                         </CardContent>
-    //                     </CardActionArea>
-    //                     <CardActions>
-    //                         <Button variant="contained" size="small" color="primary">
-    //                             BUY
-    //                         </Button>
-    //                         <IconButton aria-label="delete" size="small" color="primary" onClick={() => handleEdit(products.id)}>
-    //                             <EditIcon />
-    //                         </IconButton>
-    //                         <IconButton size="small" color="primary" onClick={handleOpen}>
-    //                             <DeleteIcon />
-    //                         </IconButton>
-    //                     </CardActions>
-    //                     <Dialog open={open} onClose={handleClose}>
-    //             <DialogTitle>Confirm deletion of product!</DialogTitle>
-    //             <DialogContent>
-    //                 <DialogContentText>
-    //                     Are you sure you want to delete the product?
-    //                 </DialogContentText>
-    //             </DialogContent>
-    //             <DialogActions>
-    //                 <Button onClick={() => handleSubmit(products.id)} color="primary" variant="contained">
-    //                     OK
-    //                 </Button>
-    //                 <Button onClick={handleClose} color="primary">
-    //                     CANCEL
-    //                 </Button>
-    //             </DialogActions>
-    //         </Dialog>
-    //                 </Card>
-    //             </Grid>
-    //         ))}
-    //         </Grid>
-    // );
         <>
         <Grid container spacing={3} mt={4}>
                 <Grid item md={10} sm={6} xs={6} >
@@ -185,6 +122,17 @@ export const ProductCard = ({ buyProduct, ...productDetails }) => {
                     </Card>
                 </Grid>
             </Grid>
+            <Snackbar open={success} autoHideDuration={2000} onClose={handleCloseAlert} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+  <Alert
+    onClose={handleCloseAlert}
+    severity="success"
+    variant="filled"
+    sx={{ width: '90%' }}
+    
+  >
+   Product {productDetails.name} modified successfully!
+  </Alert>
+</Snackbar>
         </>
     )
 

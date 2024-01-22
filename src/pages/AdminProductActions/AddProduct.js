@@ -116,30 +116,6 @@ export const AddProducts = () => {
           variant="outlined"
           margin="normal"
         />
-        {/* <div style={{ marginBottom: "30px" }}>
-          <Options setCategories={setCategories} />
-          <CreatableSelect
-            label="Category"
-            className="basic-single"
-            classNamePrefix="select"
-            name="category"
-            isClearable
-            required
-            options={[
-              ...categories.map((item) => ({
-                label: item,
-                value: item,
-              })),
-              category &&
-                !categories.includes(category.value) && {
-                  label: category.label,
-                  value: category.value,
-                },
-            ].filter(Boolean)}
-            value={category?.value}
-            onChange={(data) => setCategory(data?.value)}
-          />
-        </div> */}
 
 <div style={{ marginBottom: "30px" }}>
               <CreatableSelect

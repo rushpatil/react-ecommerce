@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from 'react-redux'
-import { useParams } from "react-router-dom";
+import { useParams, useHistory  } from "react-router-dom";
 import { viewProduct, modifyProduct, getAllCategories } from "../../api/productAPIs";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import CreatableSelect from "react-select/creatable";
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { Button } from "@material-ui/core";
+// import { components } from "react-select";
+// import { NavLink } from "react-router-dom";
 
 export const EditProduct = () => {
-  const  idObj  = useParams();//
+  const  idObj  = useParams();
   let id = idObj.id;
   console.log("id is "+idObj.id);
+  const history = useHistory();
   const [name, setName] = useState('');
   const [category, setCategory] = useState({});
   const [manufacturer, setManufacturer] = useState('');
@@ -21,6 +26,7 @@ export const EditProduct = () => {
   const [error, setError] = useState([]);
   const [categories, setCategories] = useState([]);
   const [ID, setId] = useState('');
+  const [open, setOpen] = useState(false);
 
   const AuthToken = useSelector(state => state.user?.token);
   
@@ -33,6 +39,7 @@ export const EditProduct = () => {
       setName(response.value.name);
       console.log(response);
       setId(response.value.id);
+      console.log({ID});
       // setCategory(response.value.category);
       // console.log(response.value.category);
       setManufacturer(response.value.manufacturer);
@@ -73,10 +80,10 @@ export const EditProduct = () => {
     setdescription("");
   };
 
-  const handleSubmit = async (e) => {
-    console.log(e);
+  const handleSubmit = async () => {
     try {
       const productData = {
+        id: ID,
         name,
         category: category.value,
         manufacturer,
@@ -86,20 +93,24 @@ export const EditProduct = () => {
         description,
       };
 
-      console.log(productData);
-
-      const response = await modifyProduct(ID, productData, AuthToken);
-      console.log(response);
-
+      const response = await modifyProduct(productData, AuthToken);
       if (response) {
         setError([]);
-        clearForm();
+        setOpen(true);
+        // history.push('/home');
       }
     } catch (error) {
-      console.error(error);
       clearForm();
     }
   };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpen(false);
+    history.push('/home');
+  }
 
     return (
       <div className="form-container">
@@ -196,7 +207,17 @@ export const EditProduct = () => {
         </Button>
         
       </form>
+      <Snackbar open={open} autoHideDuration={2000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+  <Alert
+    onClose={handleClose}
+    severity="success"
+    variant="filled"
+    sx={{ width: '90%' }}
+    
+  >
+   Product {name} modified successfully!
+  </Alert>
+</Snackbar>
     </div>
-
     )
 }
