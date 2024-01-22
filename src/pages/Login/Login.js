@@ -45,10 +45,12 @@ export const Login = () => {
             const response = await userApi.login(userData);
             if (response.status === 200) {
                 //Also store the token in browser cache for auth purpose
+                console.log("LOGIN SUCESS :" + JSON.stringify(response));
                 dispatch(setUser({ 
                     email, password,
                     token: response.token,
-                    roles: response.data.roles
+                    roles: response.data.roles,
+                    userId: response.data.id
                 }));
                 history.push('/home');
             }
