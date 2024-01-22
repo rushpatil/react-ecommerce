@@ -14,15 +14,24 @@ import { CardActionArea, CardActions, Dialog, DialogActions, DialogContent, Dial
 import { Alert, AlertTitle } from "@mui/material";
 import { getAllProducts, deleteProduct } from "../../api/productAPIs";
 import { useDispatch, useSelector } from 'react-redux';
+// import { useNavigate } from "react-router-dom";
 // import  {EditProduct}  from "../../pages/AdminProductActions/EditProduct";
 
 
-export const ProductsPage = () => {
+export const ProductCard = ({ buyProduct, ...productDetails }) => {
+    console.log(productDetails.id, typeof productDetails.id);
+    let truncate = (text) => {
+        if(200>text.length){
+            return text;
+        }
+        return text.substring(0, 200)+ "...";
+    };
     const [error, setError] = useState([]);
     const history = useHistory();
     const [success, setSuccess] = useState(false);
     const [apiData, setApiData] = useState([]);
     const dispatch = useDispatch();
+    // const navigate = useNavigate();
 
     let componentMounted = true;
     const [open, setOpen] = useState(false);
@@ -38,9 +47,9 @@ export const ProductsPage = () => {
         setOpen(false);
     };
 
-    const handleEdit = (id) => {
-        history.push('/editproduct/' + id);
-    };
+    // const handleEdit = (id) => {
+    //     history.push('/editproduct/' + id);
+    // };
 
     const handleSubmit = async (id) => {
         console.log(id);
@@ -65,65 +74,118 @@ export const ProductsPage = () => {
         };
         handleProducts();
     }, []);
-
+        
+    
 
     return (
-        <Grid container spacing={2} mt={3}>
-            {apiData.map((products, index) => (
-                <Grid item md={3} sm={6} xs={6} key={index}>
-                    { success ? <>
-                        <Alert severity="success" style={{justifyContent: 'center'}}>
-                            <AlertTitle>Product {products.name} deleted Successfully</AlertTitle>
-                        </Alert>
-                    </> : <></>}
+    //     <Grid container spacing={2} mt={3}>
+    //         {apiData.map((products, index) => (
+    //             <Grid item md={3} sm={6} xs={6} key={index}>
+    //                 { success ? <>
+    //                     <Alert severity="success" style={{justifyContent: 'center'}}>
+    //                         <AlertTitle>Product {products.name} deleted Successfully</AlertTitle>
+    //                     </Alert>
+    //                 </> : <></>}
+    //                 <Card sx={{ maxWidth: 345 }}>
+    //                     <CardActionArea>
+    //                         <CardMedia
+    //                             component="img" 
+    //                             height="140"
+    //                             image={products.imageUrl}
+    //                             alt="green iguana"
+    //                         />
+    //                         <CardContent>
+    //                             <Typography gutterBottom variant="h5" component="div">
+    //                                 {products.name}
+    //                             </Typography>
+    //                             <Typography variant="body2" color="text.secondary">
+    //                                 {products.description}
+    //                             </Typography>
+    //                         </CardContent>
+    //                     </CardActionArea>
+    //                     <CardActions>
+    //                         <Button variant="contained" size="small" color="primary">
+    //                             BUY
+    //                         </Button>
+    //                         <IconButton aria-label="delete" size="small" color="primary" onClick={() => handleEdit(products.id)}>
+    //                             <EditIcon />
+    //                         </IconButton>
+    //                         <IconButton size="small" color="primary" onClick={handleOpen}>
+    //                             <DeleteIcon />
+    //                         </IconButton>
+    //                     </CardActions>
+    //                     <Dialog open={open} onClose={handleClose}>
+    //             <DialogTitle>Confirm deletion of product!</DialogTitle>
+    //             <DialogContent>
+    //                 <DialogContentText>
+    //                     Are you sure you want to delete the product?
+    //                 </DialogContentText>
+    //             </DialogContent>
+    //             <DialogActions>
+    //                 <Button onClick={() => handleSubmit(products.id)} color="primary" variant="contained">
+    //                     OK
+    //                 </Button>
+    //                 <Button onClick={handleClose} color="primary">
+    //                     CANCEL
+    //                 </Button>
+    //             </DialogActions>
+    //         </Dialog>
+    //                 </Card>
+    //             </Grid>
+    //         ))}
+    //         </Grid>
+    // );
+        <>
+        <Grid container spacing={3} mt={4}>
+                <Grid item md={10} sm={6} xs={6} >
                     <Card sx={{ maxWidth: 345 }}>
                         <CardActionArea>
                             <CardMedia
                                 component="img" 
                                 height="140"
-                                image={products.imageUrl}
+                                image={productDetails.imageUrl}
                                 alt="green iguana"
                             />
                             <CardContent>
                                 <Typography gutterBottom variant="h5" component="div">
-                                    {products.name}
+                                    {productDetails.name}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
-                                    {products.description}
+                                    {productDetails.description}
                                 </Typography>
                             </CardContent>
                         </CardActionArea>
                         <CardActions>
-                            <Button variant="contained" size="small" color="primary">
+                            <Button variant="contained" size="small" color="primary" onClick = {() => buyProduct(productDetails)}>
                                 BUY
                             </Button>
-                            <IconButton aria-label="delete" size="small" color="primary" onClick={() => handleEdit(products.id)}>
+                            <IconButton aria-label="delete" size="small" color="primary" component={Link} to={`/editproduct/${productDetails.id}`} >
                                 <EditIcon />
                             </IconButton>
-                            <IconButton size="small" color="primary" onClick={handleOpen}>
+                            <IconButton size="small" color="primary" onClick={handleOpen} >
                                 <DeleteIcon />
                             </IconButton>
                         </CardActions>
                         <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Confirm deletion of product!</DialogTitle>
-                <DialogContent>
-                    <DialogContentText>
+                 <DialogTitle>Confirm deletion of product!</DialogTitle>
+                 <DialogContent>
+                     <DialogContentText>
                         Are you sure you want to delete the product?
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => handleSubmit(products.id)} color="primary" variant="contained">
+                     </DialogContentText>
+                 </DialogContent>
+                 <DialogActions>
+                    <Button onClick={() => handleSubmit(productDetails.id)} color="primary" variant="contained">
                         OK
-                    </Button>
+                   </Button>
                     <Button onClick={handleClose} color="primary">
-                        CANCEL
-                    </Button>
-                </DialogActions>
+                         CANCEL
+                     </Button>
+                 </DialogActions>
             </Dialog>
                     </Card>
                 </Grid>
-            ))}
             </Grid>
-    );
+        </>
+    )
 
 };

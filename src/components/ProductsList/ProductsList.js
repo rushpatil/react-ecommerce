@@ -85,6 +85,7 @@ const ProductsList = ( {user, allProductsList, selectedSortingFilter, category, 
             <Grid container>
             { 	products !== null && products.length > 0 &&
 					products.map((element, index) => {
+						console.log("inside product list:",element);
 						return (
 							<Grid key={"parent_product_" + index} item xs={3}>
 								<div key={"div_product_" + index} style={{display: 'flex', justifyContent: 'center', marginTop: "5%"}}>

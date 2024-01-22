@@ -8,6 +8,9 @@ import CreatableSelect from "react-select/creatable";
 import { Button } from "@material-ui/core";
 
 export const EditProduct = () => {
+  const  idObj  = useParams();//
+  let id = idObj.id;
+  console.log("id is "+idObj.id);
   const [name, setName] = useState('');
   const [category, setCategory] = useState({});
   const [manufacturer, setManufacturer] = useState('');
@@ -17,35 +20,34 @@ export const EditProduct = () => {
   const [description, setdescription] = useState('');
   const [error, setError] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [id, setId] = useState('');
-  // const history = useHistory();
+  const [ID, setId] = useState('');
 
   const AuthToken = useSelector(state => state.user?.token);
   
-  const { productId } = useParams();
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await viewProduct(id, AuthToken);
-        console.log(response.value[0].id);
-        
-        setName(response.value[0].name);
-        console.log(response);
-        setId(response.value[0].id);
-        setCategory(response.value[0].category);
-        setManufacturer(response.value[0].manufacturer);
-        setAvailableItems(response.value[0].availableItems);
-        setPrice(response.value[0].price);
-        setimageUrl(response.value[0].imageUrl);
-        setdescription(response.value[0].description);
-        setCategory({
-          label: response.value[0].category,
-          value: response.value[0].category,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    };
+  const fetchData = async () => {
+    try {
+      const response = await viewProduct(id, AuthToken);
+      console.log({response});
+      
+      setName(response.value.name);
+      console.log(response);
+      setId(response.value.id);
+      // setCategory(response.value.category);
+      // console.log(response.value.category);
+      setManufacturer(response.value.manufacturer);
+      setAvailableItems(response.value.availableItems);
+      setPrice(response.value.price);
+      setimageUrl(response.value.imageUrl);
+      setdescription(response.value.description);
+      setCategory({
+        label: response.value.category,
+        value: response.value.category,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
     const getCategories = async () => {
       try {
@@ -59,7 +61,7 @@ export const EditProduct = () => {
 
     fetchData();
     getCategories();
-  }, [id, AuthToken]);
+  }, []);
 
   const clearForm = () => {
     setName("");
@@ -86,61 +88,18 @@ export const EditProduct = () => {
 
       console.log(productData);
 
-      // const hasError = validateFields();
-      // if (hasError) {
-      //   return;
-      // }
-
-      const response = await modifyProduct(productId, productData, AuthToken);
+      const response = await modifyProduct(ID, productData, AuthToken);
       console.log(response);
 
       if (response) {
         setError([]);
         clearForm();
-        // Handle success or navigation after modification
       }
     } catch (error) {
       console.error(error);
       clearForm();
     }
   };
-
-    // const Options = (setCategories) => {
-    //     useEffect(() => {
-    //         const getCategories = async () => {
-    //             try {
-    //                 const response = await getAllCategories();
-    //                 console.log(response);
-    //                 setCategories(response.data);
-    //             } catch (error) {
-    //                 // console.log(error);
-    //             }
-    //         };
-    //         getCategories();
-    //     }, [categories]);
-    //     return null;
-    // };
-    //modal shpould open with pre filled data
-
-    // const fillForm = async (id) => {
-    //     const response = await viewProduct(id, AuthToken);
-    //     console.log(response);
-    //     setId(response.data.id);
-    //     setName(response.data.name);
-    //     setCategory(response.data.category);
-    //     setManufacturer(response.data.manufacturer);
-    //     setAvailableItems(response.data.availableItems);
-    //     setPrice(response.data.price);
-    //     setimageUrl(response.data.imageUrl);
-    //     setdescription(response.data.description);
-    // }
-
-    // const handleSubmit = async (requestJson, AuthToken) => {
-    //     console.log(requestJson);
-    //     const response = await modifyProduct(requestJson, AuthToken);
-    //     console.log(response);
-    //     setSuccess(true);
-    // }
 
     return (
       <div className="form-container">
@@ -159,29 +118,20 @@ export const EditProduct = () => {
           margin="normal"
         />
         <div style={{ marginBottom: "30px" }}>
-          {/* <Options setCategories={setCategories} /> */}
-          <CreatableSelect
-            label="Category"
-            className="basic-single"
-            classNamePrefix="select"
-            name="category"
-            isClearable
-            required
-            options={[
-              ...categories.map((item) => ({
-                label: item,
-                value: item,
-              })),
-              category &&
-                !categories.includes(category.value) && {
-                  label: category.label,
-                  value: category.value,
-                },
-            ].filter(Boolean)}
-            value={category?.value}
-            onChange={(data) => setCategory(data)}
-          />
-        </div>
+              <CreatableSelect
+                className="basic-single"
+                classNamePrefix="select"
+                name="category"
+                isClearable
+                required
+                options={categories.map((item) => ({
+                  label: item,
+                  value: item,
+                }))}
+                value={category}
+                onChange={(data) => setCategory(data)}
+              />
+            </div>
         <TextField
           required
           label="Manufacturer"
