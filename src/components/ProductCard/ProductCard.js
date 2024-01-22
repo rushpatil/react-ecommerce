@@ -17,13 +17,37 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
 
-export const ProductCard = ({ buyProduct, ...productDetails }) => {
-    console.log(productDetails.id, typeof productDetails.id);
+export const ProductCard = ({ mode, buyProduct, ...productDetails }) => {
     let truncate = (text) => {
-        if(200>text.length){
+        if (100 > text.length) {
             return text;
         }
-        return text.substring(0, 200)+ "...";
+        return text.substring(0, 100) + "...";
+    };
+
+    let checkUserMode = () => {
+        if (mode === "ADMIN") {
+            return (
+                <>
+                    <Grid item xs={2}>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <IconButton aria-label="delete" size="small" color="primary" component={Link} to={`/editproduct/${productDetails.id}`} >
+                                <EditIcon />
+                            </IconButton>
+                        </div>
+                    </Grid>
+                    <Grid item xs={2}>
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <IconButton size="small" color="primary" onClick={handleOpen} >
+                                <DeleteIcon />
+                            </IconButton>
+                        </div>
+                    </Grid>
+                </>
+            );
+        } else {
+            return <></>;
+        }
     };
     const history = useHistory();
     const [success, setSuccess] = useState(false);
@@ -71,38 +95,58 @@ export const ProductCard = ({ buyProduct, ...productDetails }) => {
         history.push('/home');
       }
 
+
     return (
         <>
-        <Grid container spacing={3} mt={4}>
-                <Grid item md={10} sm={6} xs={6} >
-                    <Card sx={{ maxWidth: 345 }}>
-                        <CardActionArea>
-                            <CardMedia
-                                component="img" 
-                                height="140"
-                                image={productDetails.imageUrl}
-                                alt="green iguana"
-                            />
-                            <CardContent>
-                                <Typography gutterBottom variant="h5" component="div">
-                                    {productDetails.name}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                    {productDetails.description}
-                                </Typography>
-                            </CardContent>
-                        </CardActionArea>
-                        <CardActions>
-                            <Button variant="contained" size="small" color="primary" onClick = {() => buyProduct(productDetails)}>
+        <Card style={{ height: "400px", width: "400px" }} sx={{ maxWidth: 345 }}>
+            <CardActionArea>
+                <CardMedia sx={{ height: "200px", display: "flex", justifyContent: "center" }}>
+                    <img
+                        src={productDetails.imageUrl}
+                        alt={"Image of " + productDetails.name}
+                        style={{
+                            maxWidth: "1000px",
+                            width: "100%",
+                            height: "200px",
+                        }}
+                    />
+                </CardMedia>
+                <CardContent>
+				<Grid container>
+					<Grid item xs={8}>
+						<div style={{display: 'flex', justifyContent: 'left'}}>
+							<Typography variant="h6" component="div" className="wrap_text" title={productDetails.name}>
+								{productDetails.name}
+							</Typography>
+						</div>
+					</Grid>
+					<Grid item xs={4}>
+						<div style={{display: 'flex', justifyContent: 'right'}}>
+							<Typography variant="h6" component="div" className="wrap_text" title={'\u20B9 ' + productDetails.price}>
+								{'\u20B9 ' + productDetails.price}
+							</Typography>
+						</div>
+					</Grid>
+				</Grid>
+				<Typography variant="body2" color="text.secondary" sx={{height: 80}}>
+					{truncate(productDetails.description)}
+				</Typography>
+			</CardContent>
+            </CardActionArea>
+            <CardActions>
+                <Grid container>
+                    <Grid item xs={8}>
+                        <div style={{ display: 'flex', justifyContent: 'left' }}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={() => buyProduct(productDetails)}
+                            >
                                 BUY
                             </Button>
-                            <IconButton aria-label="delete" size="small" color="primary" component={Link} to={`/editproduct/${productDetails.id}`} >
-                                <EditIcon />
-                            </IconButton>
-                            <IconButton size="small" color="primary" onClick={handleOpen} >
-                                <DeleteIcon />
-                            </IconButton>
-                        </CardActions>
+                           
+                            </div>
+                           { checkUserMode()}
                         <Dialog open={open} onClose={handleClose}>
                  <DialogTitle>Confirm deletion of product!</DialogTitle>
                  <DialogContent>
@@ -119,9 +163,10 @@ export const ProductCard = ({ buyProduct, ...productDetails }) => {
                      </Button>
                  </DialogActions>
             </Dialog>
-                    </Card>
                 </Grid>
             </Grid>
+            </CardActions>
+        </Card>
             <Snackbar open={success} autoHideDuration={2000} onClose={handleCloseAlert} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
   <Alert
     onClose={handleCloseAlert}

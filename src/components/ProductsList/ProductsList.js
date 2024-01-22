@@ -14,6 +14,9 @@ const ProductsList = ( {user, allProductsList, selectedSortingFilter, category, 
     const history = useHistory();
 
 	let getSortedProducts = (list, s) => {
+        if(user.roles[0] === "ADMIN"){
+            console.log(user.roles);
+        }
         console.log("Inside sortBy filter "+ list + " ****** "+ s);
 		if(s === undefined || s === null) {
 			s = "DEFAULT";
@@ -79,7 +82,7 @@ const ProductsList = ( {user, allProductsList, selectedSortingFilter, category, 
             console.log("Error in productDetail page load :"+json.reason);
         });
     };
-    
+
     return(
         <>
             <Grid container>
@@ -91,6 +94,7 @@ const ProductsList = ( {user, allProductsList, selectedSortingFilter, category, 
 								<div key={"div_product_" + index} style={{display: 'flex', justifyContent: 'center', marginTop: "5%"}}>
 									<ProductCard
 										key={"product_" + index}
+                                        mode = {user.roles[0]}
                                         buyProduct={loadProductDetailsPage}
 										{...element}
 									/>

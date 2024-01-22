@@ -9,8 +9,12 @@ import { Card } from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
 import { useTheme } from "@material-ui/core/styles";
 import SelectAddress from "../SelectAddress/SelectAddress";
+import { createOrder } from "../../api/orderApi";
+import { connect } from "react-redux";
+import { useDispatch } from 'react-redux';
 
-const ProductOrder = () => {
+const ProductOrder = ({ user }) => {
+    const dispatch = useDispatch();
     const theme = useTheme();
     const location = useLocation();
     const [activeStep, setActiveStep] = useState(0);
@@ -57,6 +61,7 @@ const ProductOrder = () => {
 
     const [orderDetail, setOrderDetail] = useState({
         quantity: productQuantity,
+        user: user.userId,
         product: selectedProduct.id,
         address: null,
         addressObject: null
@@ -119,6 +124,17 @@ const ProductOrder = () => {
         }
         setStepsForOrdering(arr);
         setActiveStep(activeStep + 1);
+    };
+
+    let placeOrder = () => {
+        console.log("Placing order using the data: " + JSON.stringify(orderDetail))
+        console.log("Using token :" + user.token);
+        createOrder(orderDetail, user.token).then(() => {
+            console.log("Order placed successfully");
+            history.push("/home");
+        }).catch((json) => {
+            console.log("Order failed :" + json.reason);
+        });
     };
     return (
         <Box sx={{ flexGrow: 1 }}>
@@ -403,6 +419,7 @@ const ProductOrder = () => {
                             activeStep === 2 &&
                             <Button variant="contained"
                                 color="primary"
+                                onClick={() => placeOrder()}
                             >
                                 PLACE ORDER
                             </Button>
@@ -415,4 +432,10 @@ const ProductOrder = () => {
 
 };
 
-export default ProductOrder;
+const mapStateToProps = (state) => {
+    return {
+        user: state.user,
+    }
+};
+
+export default connect(mapStateToProps)(ProductOrder);
