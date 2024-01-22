@@ -101,6 +101,7 @@ const Navbar = ({ user }) => {
 
 // map the Redux state to component props
 const mapStateToProps = (state) => {
+    // console.log(state);
     return {
         user: state.user,
     };
