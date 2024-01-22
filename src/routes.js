@@ -1,8 +1,12 @@
-import { ProductsPage } from "./pages/ProductsPage/ProductsPage";
+import Home from "./pages/Home/Home";
 import { Login } from "./pages/Login/Login";
 import { Signup } from "./pages/Signup/Signup";
 import { AddProducts } from "./pages/AdminProductActions/AddProduct";
 import { EditProduct } from "./pages/AdminProductActions/EditProduct";
+import ProductDetailsPage from "./components/ProductDetailsPage/ProductDetailsPage";
+import ProductOrder from "./components/ProductOrder/ProductOrder";
+
+
 
 const routes = [
     {
@@ -16,8 +20,8 @@ const routes = [
         exact: true,
     },
     {
-        path: '/',
-        component: ProductsPage,
+        path: '/home',
+        component: Home,
         exact: true,
     },
     {
@@ -30,6 +34,16 @@ const routes = [
         component: Signup,
         exact: true,
     },
+    {
+        path: '/productDetailsPage',
+        component: ProductDetailsPage,
+        exact: true,
+    },
+    {
+        path: '/placeOrder',
+        component: ProductOrder,
+        exact: true,
+    }
 ];
 
 export default routes;

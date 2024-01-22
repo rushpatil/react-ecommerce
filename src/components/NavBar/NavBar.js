@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -24,6 +24,7 @@ const Navbar = ({ user }) => {
     const dispatch = useDispatch();
     const history = useHistory();
 
+
     const handleLogout = () => {
         // clear user data by setting it to null
         dispatch(clearUser());
@@ -39,7 +40,7 @@ const Navbar = ({ user }) => {
                 <div className="navbar-container">
 
                     <div className="navbar-section">
-                        <IconButton edge="start" color="inherit" component={Link} to="/">
+                        <IconButton edge="start" color="inherit" component={Link} to="/home">
                             <ShoppingCartIcon />
                             <Typography variant="subtitle1" color="inherit">
                                 Upgrad Eshop
@@ -63,7 +64,7 @@ const Navbar = ({ user }) => {
                         {/* actions for logged in user */}
                         {user.isLoggedIn &&
                             <>
-                                <Button color="inherit" component={Link} to="/">
+                                <Button color="inherit" component={Link} to="/home">
                                     Home
                                 </Button>
                                 {console.log(user)}

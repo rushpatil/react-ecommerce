@@ -14,6 +14,7 @@ export const getAllProducts = (accessToken) => {
 		},
 	}).then((response) => {
 		response.json().then((json) => {
+			console.log("getAllProducts: "+json);
 			if(response.ok) {
 				promiseResolve({
 					data: json,
@@ -188,37 +189,46 @@ export const viewProduct = (id, accessToken) => {
 };
 
 export const getAllCategories = (accessToken) => {
-	let promiseResolve = null;
-	let promiseReject = null;
+	let promiseResolveRef = null;
+	let promiseRejectRef = null;
 	let promise = new Promise((resolve, reject) => {
-		promiseResolve = resolve;
-		promiseReject = reject;
+		promiseResolveRef = resolve;
+		promiseRejectRef = reject;
 	});
 	fetch('http://localhost:8080/api/products/categories', {
 		method: 'GET',
 		headers: {
 			'x-auth-token': accessToken,
-			'allow-origin': '*',
 		},
 	}).then((response) => {
 		response.json().then((json) => {
+			//Make every category capital and unique
+			let arr = [];
+			for(let i = 0; i < json.length; i++) {
+				let c = json[i].toUpperCase();
+				if(!arr.includes(c)) {
+					arr.push(c);
+				}
+			}
+			arr.sort();
+			arr = ["ALL", ...arr];
 			if(response.ok) {
-				promiseResolve({
-					data: json,
+				promiseResolveRef({
+					data: arr,
 					response: response,
 				});
 			} else {
-				promiseReject({
+				promiseRejectRef({
 					reason: "Server error occurred.",
 					response: response,
 				});
 			}
 		});
 	}).catch((err) => {
-		promiseReject({
+		promiseRejectRef({
 			reason: "Some error occurred.",
 			response: err,
 		});
 	});
 	return promise;
-}
+};
