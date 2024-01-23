@@ -43,14 +43,13 @@ export const createProduct = (requestJson, accessToken) => {
 		promiseResolve = resolve;
 		promiseReject = reject;
 	});
+	console.log(accessToken);
 	fetch('http://localhost:8080/api/products', {
 		method: 'POST',
 		body: JSON.stringify(requestJson),
 		headers: {
 			'Content-type': 'application/json; charset=UTF-8',
-			'Authorization': `Bearer ${accessToken}`,
-			// 'X-Auth-Token': accessToken,
-			// Authorization:`Bearer ${accessToken}`,
+			'x-auth-token': accessToken,
 		},
 	}).then((response) => {
 		response.text().then((json) => {

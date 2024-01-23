@@ -2,12 +2,18 @@ import Home from "./pages/Home/Home";
 import { Login } from "./pages/Login/Login";
 import { Signup } from "./pages/Signup/Signup";
 import { AddProducts } from "./pages/AdminProductActions/AddProduct";
+import { EditProduct } from "./pages/AdminProductActions/EditProduct";
 import ProductDetailsPage from "./components/ProductDetailsPage/ProductDetailsPage";
 import ProductOrder from "./components/ProductOrder/ProductOrder";
 
 
 
 const routes = [
+    {
+        path: '/editproduct/:id',
+        component: EditProduct,
+        exact: true,
+    },
     {
         path: '/products',
         component: AddProducts,

@@ -1,51 +1,89 @@
 import React, { useState, useEffect } from "react";
-import { connect, useSelector } from 'react-redux'
-import { createProduct, getAllCategories } from "../../api/productAPIs";
+import { useSelector } from 'react-redux'
+import { useParams, useHistory  } from "react-router-dom";
+import { viewProduct, modifyProduct, getAllCategories } from "../../api/productAPIs";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import CreatableSelect from "react-select/creatable";
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import { Button } from "@material-ui/core";
+// import { components } from "react-select";
+// import { NavLink } from "react-router-dom";
 
-export const AddProducts = () => {
-  const [name, setName] = useState("");
-  const [category, setCategory] = useState();
-  const [manufacturer, setManufacturer] = useState("");
-  const [availableItems, setAvailableItems] = useState("");
-  const [price, setPrice] = useState("");
-  const [imageUrl, setimageUrl] = useState("");
-  const [description, setdescription] = useState("");
+export const EditProduct = () => {
+  const  idObj  = useParams();
+  let id = idObj.id;
+  console.log("id is "+idObj.id);
+  const history = useHistory();
+  const [name, setName] = useState('');
+  const [category, setCategory] = useState({});
+  const [manufacturer, setManufacturer] = useState('');
+  const [availableItems, setAvailableItems] = useState('');
+  const [price, setPrice] = useState('');
+  const [imageUrl, setimageUrl] = useState('');
+  const [description, setdescription] = useState('');
   const [error, setError] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [ID, setId] = useState('');
+  const [open, setOpen] = useState(false);
 
+  const AuthToken = useSelector(state => state.user?.token);
+  
   useEffect(() => {
-      const getCategories = async () => {
-        try {
-          const response = await getAllCategories();
-          console.log(response);
-          setCategories(response.data);
-        } catch (error) {
-          // console.log(error);
-        }
-      };
-      getCategories();
-    }, []);
+  const fetchData = async () => {
+    try {
+      const response = await viewProduct(id, AuthToken);
+      console.log({response});
+      
+      setName(response.value.name);
+      console.log(response);
+      setId(response.value.id);
+      console.log({ID});
+      // setCategory(response.value.category);
+      // console.log(response.value.category);
+      setManufacturer(response.value.manufacturer);
+      setAvailableItems(response.value.availableItems);
+      setPrice(response.value.price);
+      setimageUrl(response.value.imageUrl);
+      setdescription(response.value.description);
+      setCategory({
+        label: response.value.category,
+        value: response.value.category,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+    const getCategories = async () => {
+      try {
+        const response = await getAllCategories();
+        console.log(response);
+        setCategories(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+    getCategories();
+  }, []);
 
   const clearForm = () => {
     setName("");
-    setCategory({label: "", value: ""});
+    setCategory({ label: "", value: "" });
     setManufacturer("");
     setAvailableItems("");
     setPrice("");
     setimageUrl("");
     setdescription("");
-    };
+  };
 
-  const Authtoken = useSelector(state => state.user?.token);
-  console.log(Authtoken);
-  const saveProduct = async () => {
-    // console.log(Authtoken);
+  const handleSubmit = async () => {
     try {
       const productData = {
+        id: ID,
         name,
         category: category.value,
         manufacturer,
@@ -54,56 +92,30 @@ export const AddProducts = () => {
         imageUrl,
         description,
       };
-      console.log(productData);
-      const hasError = validateFields();
-      if (hasError) {
-        return;
-      }
 
-      const response = await createProduct(productData, Authtoken);
-      console.log(response);
+      const response = await modifyProduct(productData, AuthToken);
       if (response) {
-            setError([]);
-            clearForm();
-        }
+        setError([]);
+        setOpen(true);
+        // history.push('/home');
+      }
     } catch (error) {
-      console.log(error);
       clearForm();
     }
   };
 
-  const validateFields = () => {
-    let errorList = [];
-    if (
-      !name ||
-      !category ||
-      !manufacturer ||
-      !availableItems ||
-      !price ||
-      !imageUrl ||
-      !description
-    ) {
-      errorList.push("All fields are required");
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
     }
+    setOpen(false);
+    history.push('/home');
+  }
 
-    if (availableItems && availableItems < 0) {
-      errorList.push("Available Items should be greater than 0");
-    }
-
-    if (price && price < 0) {
-      errorList.push("Price should be greater than 0");
-    }
-
-    const hasError = errorList.length > 0;
-    if (hasError) {
-      setError(errorList);
-    }
-    return hasError;
-  };
-  return (
-    <div className="form-container">
+    return (
+      <div className="form-container">
       <div className="form-header">
-        <Typography variant="h5">Add Product</Typography>
+        <Typography variant="h5">Modify Product</Typography>
       </div>
 
       <form>
@@ -116,8 +128,7 @@ export const AddProducts = () => {
           variant="outlined"
           margin="normal"
         />
-
-<div style={{ marginBottom: "30px" }}>
+        <div style={{ marginBottom: "30px" }}>
               <CreatableSelect
                 className="basic-single"
                 classNamePrefix="select"
@@ -188,7 +199,7 @@ export const AddProducts = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={saveProduct}
+          onClick={(e) => handleSubmit(e)}
           className="submit-button"
           fullWidth
         >
@@ -196,6 +207,17 @@ export const AddProducts = () => {
         </Button>
         
       </form>
+      <Snackbar open={open} autoHideDuration={2000} onClose={handleClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+  <Alert
+    onClose={handleClose}
+    severity="success"
+    variant="filled"
+    sx={{ width: '90%' }}
+    
+  >
+   Product {name} modified successfully!
+  </Alert>
+</Snackbar>
     </div>
-  );
-};
+    )
+}
