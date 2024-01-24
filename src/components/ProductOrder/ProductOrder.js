@@ -12,6 +12,8 @@ import SelectAddress from "../SelectAddress/SelectAddress";
 import { createOrder } from "../../api/orderApi";
 import { connect } from "react-redux";
 import { useDispatch } from 'react-redux';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 const ProductOrder = ({ user }) => {
     const dispatch = useDispatch();
@@ -21,6 +23,8 @@ const ProductOrder = ({ user }) => {
     const history = useHistory();
     let componentMounted = true;
     let productData = JSON.parse(location.state?.orderData);
+    const [success, setSuccess] = useState(false);
+    const [alert, setAlert] = useState(false);
     let selectedProduct = productData.product || {
         id: null,
         name: null,
@@ -92,7 +96,7 @@ const ProductOrder = ({ user }) => {
             const jsonData = JSON.stringify({
                 value: productData.product,
             });
-            history.push('/productDetailsPage', {productData: jsonData});
+            history.push('/productDetailsPage', { productData: jsonData });
         }
         else {
             let arr = [];
@@ -111,31 +115,55 @@ const ProductOrder = ({ user }) => {
         }
     };
     let moveToNextStep = () => {
-        let arr = [];
-        for (let i = 0; i < stepsForOrdering.length; i++) {
-            if (i === activeStep) {
-                arr.push({
-                    ...stepsForOrdering[activeStep],
-                    completed: true,
-                });
-            } else {
-                arr.push(stepsForOrdering[i]);
+        let next = true;
+        if (activeStep === 1) {
+            if (orderDetail.address === undefined || orderDetail.address === null) {
+                console.log("Please select address");
+                setAlert(true);
+                next = false;
             }
         }
-        setStepsForOrdering(arr);
-        setActiveStep(activeStep + 1);
+        if (next) {
+            let arr = [];
+            for (let i = 0; i < stepsForOrdering.length; i++) {
+                if (i === activeStep) {
+                    arr.push({
+                        ...stepsForOrdering[activeStep],
+                        completed: true,
+                    });
+                } else {
+                    arr.push(stepsForOrdering[i]);
+                }
+            }
+            setStepsForOrdering(arr);
+            setActiveStep(activeStep + 1);
+        }
+        else {
+            setActiveStep(activeStep);
+        }
     };
 
     let placeOrder = () => {
-        console.log("Placing order using the data: " + JSON.stringify(orderDetail))
-        console.log("Using token :" + user.token);
         createOrder(orderDetail, user.token).then(() => {
             console.log("Order placed successfully");
-            history.push("/home");
+            setSuccess(true);
         }).catch((json) => {
             console.log("Order failed :" + json.reason);
         });
     };
+    const handleCloseSuccessAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSuccess(false);
+        history.push('/home');
+    }
+    const handleCloseAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setAlert(false);
+    }
     return (
         <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={3}>
@@ -427,7 +455,30 @@ const ProductOrder = ({ user }) => {
                     </div>
                 </Grid>
             </Grid>
+            <Snackbar open={success} autoHideDuration={2000} onClose={handleCloseSuccessAlert} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+                <Alert
+                    onClose={handleCloseSuccessAlert}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: '90%' }}
+
+                >
+                    Order placed successfully!
+                </Alert>
+            </Snackbar>
+            <Snackbar open={alert} autoHideDuration={2000} onClose={handleCloseAlert} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+                <Alert
+                    onClose={handleCloseAlert}
+                    severity="error"
+                    variant="filled"
+                    sx={{ width: '90%' }}
+
+                >
+                    Please select address!
+                </Alert>
+            </Snackbar>
         </Box>
+
     );
 
 };

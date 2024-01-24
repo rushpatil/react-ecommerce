@@ -10,6 +10,8 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import { createAddress, getAllAddresses } from "../../api/addressApi";
 import { connect } from 'react-redux';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 const SelectAddress = ({ user, onAddressCallback, address }) => {
     let initialState = {
@@ -23,6 +25,7 @@ const SelectAddress = ({ user, onAddressCallback, address }) => {
 	};
     const [addressList, setAddressList] = useState([]);
     const [selectedAddress, setSelectedAddress] = useState(address);
+    const [success, setSuccess] = useState(false);
     const [formData, setFormData] = useState(initialState);
     const initAddressList = useCallback(() => {
         getAllAddresses(user.token).then((json) => {
@@ -76,6 +79,12 @@ const SelectAddress = ({ user, onAddressCallback, address }) => {
         });
     };
 
+    const handleCloseSuccessAlert = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSuccess(false);
+    }
     return (
 
         <Box sx={{ flexGrow: 1 }}>
@@ -235,6 +244,17 @@ const SelectAddress = ({ user, onAddressCallback, address }) => {
 					<Grid item xs={4}/>
 				</Grid>
             </Grid>
+            <Snackbar open={success} autoHideDuration={2000} onClose={handleCloseSuccessAlert} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+                <Alert
+                    onClose={handleCloseSuccessAlert}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: '90%' }}
+
+                >
+                    Address saved successfully!
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };
