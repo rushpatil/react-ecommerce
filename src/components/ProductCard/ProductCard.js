@@ -135,7 +135,7 @@ export const ProductCard = ({ mode, buyProduct, ...productDetails }) => {
             </CardActionArea>
             <CardActions>
                 <Grid container>
-                    <Grid item xs={8}>
+                    <Grid item xs={8} style={{display: "flex", flexDirection: "row"}}>
                         <div style={{ display: 'flex', justifyContent: 'left' }}>
                             <Button
                                 variant="contained"
@@ -175,7 +175,7 @@ export const ProductCard = ({ mode, buyProduct, ...productDetails }) => {
     sx={{ width: '90%' }}
     
   >
-   Product {productDetails.name} modified successfully!
+   Product {productDetails.name} deleted successfully!
   </Alert>
 </Snackbar>
         </>

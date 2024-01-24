@@ -5,6 +5,8 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import CreatableSelect from "react-select/creatable";
 import { Button } from "@material-ui/core";
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 export const AddProducts = () => {
   const [name, setName] = useState("");
@@ -16,6 +18,7 @@ export const AddProducts = () => {
   const [description, setdescription] = useState("");
   const [error, setError] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
       const getCategories = async () => {
@@ -65,12 +68,21 @@ export const AddProducts = () => {
       if (response) {
             setError([]);
             clearForm();
+            setSuccess(true);
         }
     } catch (error) {
       console.log(error);
       clearForm();
     }
   };
+
+  const handleCloseAlert = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSuccess(false);
+    clearForm();
+  }
 
   const validateFields = () => {
     let errorList = [];
@@ -196,6 +208,16 @@ export const AddProducts = () => {
         </Button>
         
       </form>
+      <Snackbar open={success} autoHideDuration={2000} onClose={handleCloseAlert} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+  <Alert
+    onClose={handleCloseAlert}
+    severity="success"
+    variant="filled"
+    sx={{ width: '100%' }}
+  >
+   Product Added successfully!
+  </Alert>
+</Snackbar>
     </div>
   );
 };
