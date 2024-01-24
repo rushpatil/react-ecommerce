@@ -212,11 +212,10 @@ export const AddProducts = () => {
   <Alert
     onClose={handleCloseAlert}
     severity="success"
-    color="green"
     variant="filled"
-    sx={{ width: '90%' }}
+    sx={{ width: '100%' }}
   >
-   Product {name} Added successfully!
+   Product Added successfully!
   </Alert>
 </Snackbar>
     </div>
