@@ -75,10 +75,8 @@ export const ProductCard = ({ mode, buyProduct, ...productDetails }) => {
     useEffect(() => {
         const handleProducts = async () => {
             const response = await getAllProducts(AuthToken);
-            console.log(response);
             if (componentMounted) {
                 setApiData(response.data);
-                console.log(apiData);
             }
             return () => {
                 componentMounted = false;

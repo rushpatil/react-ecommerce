@@ -15,7 +15,6 @@ const Home = ({ user }) => {
     const dispatch = useDispatch();
 
     const accessToken = user.token;
-    console.log(accessToken);
     const initialFetchProductsData = useCallback(() => {
         dispatch(initialCatalog(accessToken));
     }, [dispatch, accessToken]);

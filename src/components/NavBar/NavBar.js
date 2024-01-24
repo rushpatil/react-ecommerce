@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import { React, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -23,7 +23,7 @@ const Navbar = ({ user }) => {
 
     const dispatch = useDispatch();
     const history = useHistory();
-
+    const [searchTerm, setSearchTerm] = useState('');
 
     const handleLogout = () => {
         // clear user data by setting it to null
@@ -31,6 +31,10 @@ const Navbar = ({ user }) => {
 
         // redirect the user to a login page
         history.push('/login');
+    };
+    const handleSearch = () => {
+        // Update the search parameters in the URL
+        history.push(`/home?query=${encodeURIComponent(searchTerm)}`);
     };
 
     return (
@@ -52,6 +56,12 @@ const Navbar = ({ user }) => {
                         {user.isLoggedIn &&
                             <div className="searchbar-container">
                                 <InputBase
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    onKeyDown={(event) => {
+                                        if (event.key === "Enter") {
+                                            handleSearch();
+                                        }
+                                    }}
                                     placeholder="Search ..."
                                     startAdornment={<SearchIcon />}
                                 />
@@ -67,7 +77,6 @@ const Navbar = ({ user }) => {
                                 <Button color="inherit" component={Link} to="/home">
                                     Home
                                 </Button>
-                                {console.log(user)}
                                 {user?.roles?.includes('ADMIN') &&
                                     <Button color="inherit" component={Link} to="/products">
                                         Add Product
@@ -102,7 +111,6 @@ const Navbar = ({ user }) => {
 
 // map the Redux state to component props
 const mapStateToProps = (state) => {
-    // console.log(state);
     return {
         user: state.user,
     };
